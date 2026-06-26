@@ -15,7 +15,7 @@ class Solution:
         for layer in model:
             x = layer(x)
             if isinstance(layer, nn.ReLU):
-                dead_frac = round((x <= 0).all(dim = 0).float().mean().item(), 4)
+                dead_frac = round((x == 0).all(dim = 0).float().mean().item(), 4)
                 stats.append(dead_frac)
         return stats
 
@@ -29,9 +29,8 @@ class Solution:
         # 4. 'healthy' if max dead fraction < 0.1
         # 5. 'healthy' otherwise
         
-        for dead_frac in dead_fractions:
-            if dead_frac > 0.5:
-                return "use_leaky_relu"
+        if max(dead_fractions) > 0.5: 
+            return "use_leaky_relu"
         
         if dead_fractions[0] > 0.3: 
             return "reinitialize"
