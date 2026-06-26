@@ -57,7 +57,7 @@ class Solution:
 
         for layer in range(layers):
             if activation_stats[layer]['dead_fraction'] > 0.5: return "dead_neurons"
-            if gradient_stats[layer]['norm'] > 1000 or activation_stats[layer]['std'] > 10: return "exploding_gradients"
+            if (layer == layers - 1 and gradient_stats[layer]['norm'] > 1000) or activation_stats[layer]['std'] > 10: return "exploding_gradients"
             if gradient_stats[layer]['norm'] < 1e-5 or activation_stats[layer]['std'] < 0.1: return "vanishing_gradients"
         
         return "healthy"
